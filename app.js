@@ -6,8 +6,19 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var interviewEventService = require('./interview_event');
 
 var app = express();
+
+const CANDIDATE_ID = 'EXAMPLE@EMAIL.COM';
+
+app.get('/api/events/filter', async (req, res) => {
+	console.log("inside api!");
+  var testcase_id = req.query.testcase_id;
+  var events = await interviewEventService(CANDIDATE_ID, testcase_id);
+  events = events.sort((a, b) => a.event_id - b.event_id);
+  return res.status(200).send(events);
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
